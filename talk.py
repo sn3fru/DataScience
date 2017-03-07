@@ -4,6 +4,7 @@ import math
 from functools import partial
 from IPython.display import Image
 
+
 print ('Data Science')
 print ("\n")
 print ("Data Science e uma area relativamente nova de estudos, mas que se aproveita")
@@ -17,12 +18,31 @@ print ("\n")
 
 #####################################################################
 print ("Nivelando Matematica Vetorial Basica")
+
+
+print ("vetores")
+
+v1 = [1,2]
+v2 = [2,1]
+
+plot_arrows(v1,v2)
+
 def vector_subtract(v,w):
     return [v_i - w_i
            for v_i, w_i in zip(v,w)]
 
+subtract = (vector_subtract(v1,v2))
+
+print (subtract)
+
+plot_subtract(v1,v2,subtract)
+
 def scalar_multiply(c, v):
     return [c * v_i for v_i in v]
+
+print (scalar_multiply(2,v1))
+
+plot_scalar(2,v1)
 
 def dot(v,w):
     return sum(v_i * w_i
@@ -51,7 +71,7 @@ def derivative(x):
 # apenas para x^2. simplificando ..
 
 derivative_estimate = partial(difference_quotient, square, h=0.00001)
-
+derivative_estimate
 
 #####################################################################
 print ("Nivelando Estatistica e Probabilidade Basica")
@@ -276,3 +296,38 @@ def minimize_stochastic(target_fn, gradient_fn, x, y, theta_0, alpha_0=0.01):
 
 
 #####################################################################
+
+def plot_arrows(v1,v2):
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    ax.quiver((0,0), (0,0), v1, v2, units = 'xy', scale = 1)
+    plt.axis('equal')
+    plt.xticks(range(-2,5))
+    plt.yticks(range(-2,5))
+    plt.grid()
+    return plt.show()
+
+
+def plot_subtract(v1,v2,v3):
+    v0 = [0,0]
+    soa = np.array([v0+v1, v0+v2, v2+v3])
+    X, Y, U, V = zip(*soa)
+    fig_sub = plt.figure()
+    ax = fig_sub.add_subplot(111)
+    ax.quiver([0,0,2], [0,0,1], U, V, angles='xy', scale_units='xy', scale=1)
+    plt.axis('equal')
+    ax.quiver(X, Y, U, V, angles='xy', scale_units='xy', scale=1)
+    ax.set_xlim([-2, 5])
+    ax.set_ylim([-2, 5])
+    plt.grid()
+    plt.draw()
+    return plt.show()
+
+def plot_scalar(c,v1):
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    ax.quiver((1,1), (2,0), v1, scalar_multiply(c,v1), units = 'xy', scale = 1)
+    plt.axis('equal')
+    plt.xticks(range(-2,7))
+    plt.yticks(range(-2,7))
+    return plt.show()
