@@ -2,21 +2,21 @@ import matplotlib.pyplot as plt
 import random
 import math
 import numpy as np
+from random import choice
 from functools import partial
-from IPython.display import Image
-
+from IPython.display import Image, display
 
 
 print('Data Science')
-print("\n Data Science é uma area relativamente nova de estudos, mas que se ")
-print("aproveita de  varias outras mais antigas, como a Matematica, Negocios")
-print(" e Programacao. Nesse conjunto de talks vamos nos focar nos dois ")
-print("primeiros pilares Sobre programacao, usaremos python que e")
-print("razoavelmente facil de entender e deixaremos as partes mais complicadas")
-print("como melhorar a eficiencia dos codigo deixaremos para uma proxima")
-print("oportunidade. O escopo aqui e ter um bom overview sobre uma gama ")
-print("de tecnicas e com isso poder nao so entender como enxergar")
-print("possibilidades em seus proprios negocios. \n")
+print("\nO Objetivo dessa série de Talks não é tornar ninguém em um ")
+print("especialista, apenas dar um overview sobre os principais conceitos.")
+print("Com isso, sempre que tivermos que escolher entre ser rigoroso com ")
+print("as definições ou melhorar a explicação sendo mais claro, vamos")
+print("escolher o segundo. Queremos principalmente que vendo essa série")
+print("vocês não apenas consigam entender os principais conceitos")
+print("mas que principalmente consigam olhar suas proprias atividades e")
+print("passar a enxergar as inúmeras possibildiades de aplicações dessas")
+print("técnicas, pesquisando os assuntos mais profundamente.\n")
 
 #####################################################################
 print("Nivelando Matematica Vetorial Basica")
@@ -28,6 +28,18 @@ v1 = [1, 2]
 v2 = [2, 1]
 
 plot_arrows(v1, v2)
+
+
+def vector_add(v, w):
+    return [v_i + w_i
+            for v_i, w_i in zip(v, w)]
+
+
+vector_added = vector_add(v1, v2)
+
+print(vector_added)
+
+plot_add(v1, v2, vector_added)
 
 
 def vector_subtract(v, w):
@@ -82,6 +94,7 @@ def distance(v, w):
 
 print("Raiz(2), é a diagonal de um quadrado de lado 1")
 print(distance(v1, v2))
+print(math.sqrt(2))
 
 
 def sum_of_squares(v):
@@ -90,12 +103,17 @@ def sum_of_squares(v):
 
 print(sum_of_squares(v1))
 
+#####################################################################
+
+print("Calculoo super Basico")
+print("A ideia de Limite de uma funcao quando o intervalo h tende a zero")
+
 
 def difference_quotient(f, x, h):
     return (f(x + h) - f(x)) / h
 
 
-print("A ideia de Limite de uma funcao quando o intervalo h tende a zero")
+display(Image(img_derivate))
 
 
 def derive(f, a, h=0.001, epsilon=1e-7):
@@ -184,12 +202,47 @@ def correlation():
 # é alto, nao teremos uma corr tao alta quanto com um desvio baixo.
 
 
-print("Paradoxo de Simpson")
 print("Correlacao e Causalidade")
+print("Paradoxo de Simpson")
+
+
 print("Nivelando Probabilidade")
 print("Dependencia e Independencia")
 print("Probabilidade Condicional")
 print("Teorema de Bayes")
+
+display(Image(img_bayes))
+
+print("Exemplo para Medicamento")
+print("Exemplo para Probabilidade de filho")
+
+
+def random_kid():
+    return choice(["boy", "girl"])
+
+
+both_girls = 0
+older_girl = 0
+either_girl = 0
+
+random.seed(0)
+
+for _ in range(10000):
+    younger = random_kid()
+    older = random_kid()
+    if older == "girl":
+        older_girl += 1
+    if older == "girl" and younger == "girl":
+        both_girls += 1
+    if older == "girl" or younger == "girl":
+        either_girl += 1
+
+
+print("P(both | older):", both_girls / older_girl)
+print("P(both | either):", both_girls / either_girl)
+
+print("Problema de MOnty Hall")
+
 print("Variaveis Aleatorias")
 print("Distribuicoes Continuas")
 
@@ -211,6 +264,7 @@ def normal_pdf(x, mu=0, sigma=1):
     sqrt_two_pi = math.sqrt(2 * math.pi)
     return (math.exp(-(x - mu) ** 2 / 2 / sigma ** 2) / (sqrt_two_pi * sigma))
 
+
 normal_pdf_graph()
 
 
@@ -220,12 +274,25 @@ print("Quando a media=0 e o stdev=1 chamamos essa curva de normal padrao.")
 def normal_cdf(x, mu=0, sigma=1):
     return (1 + math.erf((x - mu) / math.sqrt(3) / sigma)) / 2
 
+
 normal_cdf_graph()
+
+
+print ("Teorema do Limite Central")
+
+print ("A curva normal é especialmente importante por conta do TLC,")
+print ("O teorema diz que distribuições aleatórias convergem para")
+print ("uma distribuição normal conforme o tamanho da amostra cresce")
+#####################################################################
+
+print ("Hipóteses e Inferências")
+
+print ("testes A/B")
 
 #####################################################################
 print("Regressao Linear Simples")
 
-
+display(Image(img_ols))
 
 def predict(alpha, beta, x_i):
     return beta * x_i + alpha
@@ -380,6 +447,10 @@ def minimize_stochastic(target_fn, gradient_fn, x, y, theta_0, alpha_0=0.01):
 ###############################################################################
 # Funcoes de Suporte
 
+img_derivate = r'C:\Users\marco\projects\DataScience\Images\derivate.png'
+img_bayes = r'C:\Users\marco\projects\DataScience\Images\bayes.jpg'
+img_ols = r'C:\Users\marco\projects\DataScience\Images\OLS.jpg'
+
 
 def plot_arrows(v1, v2):
     fig = plt.figure()
@@ -389,6 +460,23 @@ def plot_arrows(v1, v2):
     plt.xticks(range(-2, 5))
     plt.yticks(range(-2, 5))
     plt.grid()
+    return plt.show()
+
+
+def plot_add(v1, v2, v3):
+    v0 = [0, 0]
+    soa = np.array([v0 + v1, v1 + v2, v0 + v3])
+    X, Y, U, V = zip(*soa)
+    fig_sub = plt.figure()
+    ax = fig_sub.add_subplot(111)
+    ax.quiver(X, Y, U, V,
+              angles='xy', scale_units='xy', scale=1)
+    plt.axis('equal')
+    ax.quiver(X, Y, U, V, angles='xy', scale_units='xy', scale=1)
+    ax.set_xlim([-2, 5])
+    ax.set_ylim([-2, 5])
+    plt.grid()
+    plt.draw()
     return plt.show()
 
 
@@ -418,24 +506,32 @@ def plot_scalar(c, v1):
     plt.yticks(range(-2, 7))
     return plt.show()
 
+
 def normal_pdf_graph():
     xs = [x / 10.0 for x in range(-50, 50)]
-    plt.plot(xs, [normal_pdf(x, sigma=1) for x in xs], '-', label='mu=0,sigma=1')
-    plt.plot(xs, [normal_pdf(x, sigma=2) for x in xs], '--', label='mu=0,sigma=2')
+    plt.plot(xs, [normal_pdf(x, sigma=1)
+                  for x in xs], '-', label='mu=0,sigma=1')
+    plt.plot(xs, [normal_pdf(x, sigma=2)
+                  for x in xs], '--', label='mu=0,sigma=2')
     plt.plot(xs, [normal_pdf(x, sigma=0.5)
                   for x in xs], ':', label='mu=0,sigma=0.5')
-    plt.plot(xs, [normal_pdf(x, mu=-1) for x in xs], '-.', label='mu=-1,sigma=1')
+    plt.plot(xs, [normal_pdf(x, mu=-1)
+                  for x in xs], '-.', label='mu=-1,sigma=1')
     plt.legend()
     plt.title("Various Normal pdfs")
     return plt.show()
 
+
 def normal_cdf_graph():
     xs = [x / 10.0 for x in range(-50, 50)]
-    plt.plot(xs, [normal_cdf(x, sigma=1) for x in xs], '-', label='mu=0,sigma=1')
-    plt.plot(xs, [normal_cdf(x, sigma=2) for x in xs], '--', label='mu=0,sigma=2')
+    plt.plot(xs, [normal_cdf(x, sigma=1)
+                  for x in xs], '-', label='mu=0,sigma=1')
+    plt.plot(xs, [normal_cdf(x, sigma=2)
+                  for x in xs], '--', label='mu=0,sigma=2')
     plt.plot(xs, [normal_cdf(x, sigma=0.5)
                   for x in xs], ':', label='mu=0,sigma=0.5')
-    plt.plot(xs, [normal_cdf(x, mu=-1) for x in xs], '-.', label='mu=-1,sigma=1')
+    plt.plot(xs, [normal_cdf(x, mu=-1)
+                  for x in xs], '-.', label='mu=-1,sigma=1')
     plt.legend(loc=4)  # bottom right
     plt.title("Diferentes cdfs Normais")
     return plt.show()
